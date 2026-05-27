@@ -1,1 +1,1430 @@
+<!DOCTYPE html>
+<html lang="pt-br">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+Mercado Inteligente
+</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+}
+
+body{
+background:#f5f5f5;
+color:#222;
+}
+
+.page{
+display:none;
+padding:15px;
+padding-bottom:150px;
+min-height:100vh;
+}
+
+.active{
+display:block;
+}
+
+.topo{
+font-size:26px;
+font-weight:bold;
+margin-bottom:15px;
+}
+
+.card{
+background:white;
+padding:15px;
+border-radius:20px;
+margin-bottom:15px;
+box-shadow:0 2px 10px rgba(0,0,0,0.08);
+}
+
+input{
+width:100%;
+padding:14px;
+margin-top:10px;
+border-radius:12px;
+border:1px solid #ddd;
+background:#fafafa;
+}
+
+button{
+width:100%;
+padding:14px;
+margin-top:10px;
+border:none;
+border-radius:14px;
+background:#22c55e;
+color:white;
+font-weight:bold;
+font-size:15px;
+cursor:pointer;
+}
+
+#camera{
+width:100%;
+height:260px;
+background:black;
+border-radius:20px;
+overflow:hidden;
+margin-top:10px;
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+}
+
+.prod{
+background:#fafafa;
+padding:12px;
+border-radius:14px;
+margin-top:10px;
+border:1px solid #eee;
+}
+
+.prod button{
+margin-top:8px;
+padding:8px;
+font-size:13px;
+}
+
+.ia{
+background:#ecfdf5;
+padding:12px;
+border-radius:14px;
+margin-top:10px;
+color:#166534;
+font-weight:bold;
+}
+
+.menu{
+position:fixed;
+bottom:70px;
+left:0;
+width:100%;
+height:70px;
+background:white;
+display:flex;
+justify-content:space-around;
+align-items:center;
+border-top:1px solid #ddd;
+z-index:1000;
+overflow:auto;
+}
+
+.menu button{
+background:none;
+color:#333;
+font-size:20px;
+width:auto;
+margin:0;
+padding:8px;
+}
+
+.anuncios{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+height:70px;
+background:#ecfdf5;
+border-top:1px solid #ddd;
+display:flex;
+align-items:center;
+overflow:auto;
+padding:10px;
+}
+
+.ads{
+display:flex;
+gap:10px;
+}
+
+.ad{
+background:white;
+padding:10px;
+border-radius:12px;
+min-width:220px;
+font-size:13px;
+box-shadow:0 2px 6px rgba(0,0,0,0.08);
+}
+
+.total{
+font-size:24px;
+font-weight:bold;
+color:#22c55e;
+margin-top:10px;
+}
+
+#loginTela{
+padding:30px 20px;
+min-height:100vh;
+}
+
+.logo{
+font-size:30px;
+font-weight:bold;
+margin-bottom:30px;
+}
+
+video{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div id="loginTela">
+
+<div class="logo">
+🛒 Mercado Inteligente
+</div>
+
+<input
+id="email"
+placeholder="Email"
+type="email">
+
+<input
+id="senha"
+type="password"
+placeholder="Senha">
+
+<button onclick="criarConta()">
+Criar Conta
+</button>
+
+<button
+onclick="login()"
+style="background:#3b82f6;margin-top:8px;">
+
+Entrar
+
+</button>
+
+</div>
+
+<!-- APP -->
+
+<div id="appTela" style="display:none;">
+
+<!-- HOME -->
+
+<div class="page active" id="home">
+
+<div class="topo">
+🏠 Home
+</div>
+
+<div class="card">
+
+<h3>
+Bem-vindo
+</h3>
+
+<p id="usuarioInfo">
+Usuário
+</p>
+
+</div>
+
+<div class="card">
+
+<h3>
+💰 Saldo
+</h3>
+
+<h1 id="saldo">
+R$ 0,00
+</h1>
+
+</div>
+
+<div class="card">
+
+<h3>
+📊 Gastos Total
+</h3>
+
+<div class="total">
+
+R$
+<span id="total">
+0,00
+</span>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- SCANNER -->
+
+<div class="page" id="scanner">
+
+<div class="topo">
+📷 Scanner
+</div>
+
+<div class="card">
+
+<div id="camera">
+Abrindo câmera...
+</div>
+
+<p id="codigo">
+Aguardando leitura...
+</p>
+
+</div>
+
+<div class="card">
+
+<input
+id="produto"
+placeholder="Nome do produto">
+
+<input
+id="preco"
+placeholder="Preço (ex: 12.50)"
+type="number"
+step="0.01">
+
+<button onclick="salvarProduto()">
+
+💾 Salvar Produto
+
+</button>
+
+</div>
+
+</div>
+
+<!-- ALIMENTAÇÃO -->
+
+<div class="page" id="alimentacao">
+
+<div class="topo">
+🍔 Alimentação
+</div>
+
+<div class="card">
+
+<h3>
+Produtos Salvos
+</h3>
+
+<div id="listaProdutos">
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>
+🍽️ Cardápio
+</h3>
+
+<div id="cardapio">
+</div>
+
+<div class="ia" id="iaComida">
+
+IA aguardando...
+
+</div>
+
+</div>
+
+</div>
+
+<!-- RESERVA -->
+
+<div class="page" id="reserva">
+
+<div class="topo">
+💰 Reserva Inteligente
+</div>
+
+<div class="card">
+
+<h3>
+Saldo Atual
+</h3>
+
+<h1 id="saldoReserva">
+
+R$ 0,00
+
+</h1>
+
+</div>
+
+<div class="card">
+
+<h3>
+💵 Adicionar Dinheiro
+</h3>
+
+<input
+id="entradaValor"
+placeholder="Valor"
+type="number"
+step="0.01">
+
+<button onclick="addEntrada()">
+
+➕ Adicionar Entrada
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>
+🧠 IA Financeira
+</h3>
+
+<div class="ia" id="iaReserva">
+
+IA iniciando...
+
+</div>
+
+</div>
+
+</div>
+
+<!-- DIVIDAS -->
+
+<div class="page" id="dividas">
+
+<div class="topo">
+🧾 Dívidas
+</div>
+
+<div class="card">
+
+<input
+id="nomeDivida"
+placeholder="Nome da dívida">
+
+<input
+id="valorDivida"
+placeholder="Valor"
+type="number"
+step="0.01">
+
+<button onclick="addDivida()">
+
+💾 Salvar Dívida
+
+</button>
+
+<div id="listaDividas">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- HISTÓRICO -->
+
+<div class="page" id="historicoPage">
+
+<div class="topo">
+📦 Histórico
+</div>
+
+<div class="card">
+
+<div id="historico">
+</div>
+
+</div>
+
+</div>
+
+<!-- LAZER -->
+
+<div class="page" id="lazer">
+
+<div class="topo">
+🎉 Lazer
+</div>
+
+<div class="card">
+
+<div class="prod">
+🎬 Cinema
+</div>
+
+<div class="prod">
+🚶 Passeio
+</div>
+
+<div class="prod">
+🌳 Parque
+</div>
+
+</div>
+
+</div>
+
+<!-- EMPREENDEDOR -->
+
+<div class="page" id="empreendedor">
+
+<div class="topo">
+🏪 Empreendedor
+</div>
+
+<div class="card">
+
+<input
+id="empresa"
+placeholder="Nome empresa">
+
+<input
+id="produtoEmpresa"
+placeholder="Produto">
+
+<input
+id="promoEmpresa"
+placeholder="Promoção">
+
+<button onclick="salvarEmpresa()">
+
+📢 Publicar Promoção
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h3>
+⭐ Plano Parceiro
+</h3>
+
+<h1 style="color:#22c55e;">
+
+R$ 19,90
+
+</h1>
+
+<p>
+Anual
+</p>
+
+<div class="ia">
+
+✔ Divulgação no app
+
+<br>
+
+✔ Promoções
+
+<br>
+
+✔ Clientes próximos
+
+<br>
+
+✔ Cashback
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h3>
+🎁 Promoções Região
+</h3>
+
+<div id="listaEmpresas">
+</div>
+
+</div>
+
+</div>
+
+<!-- MENU -->
+
+<div class="menu">
+
+<button onclick="abrir('home')">
+🏠
+</button>
+
+<button onclick="abrir('scanner')">
+📷
+</button>
+
+<button onclick="abrir('alimentacao')">
+🍔
+</button>
+
+<button onclick="abrir('reserva')">
+💰
+</button>
+
+<button onclick="abrir('dividas')">
+🧾
+</button>
+
+<button onclick="abrir('historicoPage')">
+📦
+</button>
+
+<button onclick="abrir('lazer')">
+🎉
+</button>
+
+<button onclick="abrir('empreendedor')">
+🏪
+</button>
+
+</div>
+
+<!-- ANÚNCIOS -->
+
+<div class="anuncios">
+
+<div class="ads">
+
+<div class="ad">
+💡 Economia hoje
+</div>
+
+<div class="ad">
+📈 Renda extra
+</div>
+
+<div class="ad">
+🛒 Promoções
+</div>
+
+<div class="ad">
+💰 Guarde dinheiro
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+
+<script type="module">
+
+
+
+
+
+import { initializeApp }
+
+from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+
+import {
+getAuth,
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword
+}
+
+from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+onSnapshot,
+doc,
+setDoc,
+query,
+orderBy
+}
+
+from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+/* FIREBASE */
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyAdirRN9nHaekNUjM3upyPTSBRVollrlMI",
+
+authDomain: "deus-fiel-7a2cc.firebaseapp.com",
+
+projectId: "deus-fiel-7a2cc",
+
+storageBucket: "deus-fiel-7a2cc.firebasestorage.app",
+
+messagingSenderId: "746071893459",
+
+appId: "1:746071893459:web:89f6d97a86917906187b26"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
+const db = getFirestore(app);
+
+let saldoValor = 0;
+
+let totalGastos = 0;
+
+let codigoLido = "";
+
+let uidAtual = null;
+
+/* COLEÇÕES */
+
+const colProdutos = () =>
+collection(db, `usuarios/${uidAtual}/produtos`);
+
+const colDividas = () =>
+collection(db, `usuarios/${uidAtual}/dividas`);
+
+const docSaldo = () =>
+doc(db, `usuarios/${uidAtual}/dados/saldo`);
+
+/* CRIAR CONTA */
+
+window.criarConta = function(){
+
+const e =
+document.getElementById("email").value.trim();
+
+const s =
+document.getElementById("senha").value;
+
+if(!e || !s){
+
+alert("Preencha email e senha");
+
+return;
+
+}
+
+createUserWithEmailAndPassword(auth,e,s)
+
+.then(()=>{
+
+alert("✔ Conta criada");
+
+})
+
+.catch(err=>{
+
+alert(err.message);
+
+});
+
+}
+
+/* LOGIN */
+
+window.login = function(){
+
+const e =
+document.getElementById("email").value.trim();
+
+const s =
+document.getElementById("senha").value;
+
+if(!e || !s){
+
+alert("Preencha email e senha");
+
+return;
+
+}
+
+signInWithEmailAndPassword(auth,e,s)
+
+.then((cred)=>{
+
+uidAtual = cred.user.uid;
+
+document.getElementById("loginTela").style.display =
+"none";
+
+document.getElementById("appTela").style.display =
+"block";
+
+document.getElementById("usuarioInfo").innerText =
+cred.user.email;
+
+iniciarCamera();
+
+ouvirProdutos();
+
+ouvirDividas();
+
+ouvirSaldo();
+
+ouvirEmpresas();
+
+})
+
+.catch(err=>{
+
+alert(err.message);
+
+});
+
+}
+
+/* MENU */
+
+window.abrir = function(id){
+
+document.querySelectorAll(".page")
+
+.forEach(p=>p.classList.remove("active"));
+
+document.getElementById(id)
+
+.classList.add("active");
+
+
+
+
+  /* CÂMERA */
+
+async function iniciarCamera(){
+
+try{
+
+const stream =
+await navigator.mediaDevices.getUserMedia({
+
+video:{
+facingMode:{ ideal:"environment" }
+},
+
+audio:false
+
+});
+
+const video =
+document.createElement("video");
+
+video.setAttribute("autoplay",true);
+
+video.setAttribute("playsinline",true);
+
+video.srcObject = stream;
+
+const cam =
+document.getElementById("camera");
+
+cam.innerHTML = "";
+
+cam.appendChild(video);
+
+Quagga.init({
+
+inputStream:{
+type:"LiveStream",
+target:video
+},
+
+decoder:{
+readers:[
+"ean_reader",
+"ean_8_reader",
+"code_128_reader"
+]
+},
+
+locate:false,
+frequency:20
+
+},
+
+(err)=>{
+
+if(!err){
+
+Quagga.start();
+
+}
+
+});
+
+Quagga.onDetected((data)=>{
+
+codigoLido =
+data.codeResult.code;
+
+document.getElementById("codigo").innerText =
+
+"📦 Código: " + codigoLido;
+
+});
+
+}
+
+catch(e){
+
+document.getElementById("camera").innerText =
+
+"Câmera indisponível";
+
+}
+
+}
+
+/* SALVAR PRODUTO */
+
+window.salvarProduto = function(){
+
+const nome =
+document.getElementById("produto").value.trim();
+
+const preco =
+parseFloat(
+document.getElementById("preco").value
+);
+
+if(!nome || isNaN(preco) || preco <= 0){
+
+alert("Preencha nome e preço");
+
+return;
+
+}
+
+addDoc(
+
+colProdutos(),
+
+{
+nome,
+preco,
+codigo:codigoLido || "—",
+data:Date.now()
+}
+
+)
+
+.then(()=>{
+
+document.getElementById("produto").value = "";
+
+document.getElementById("preco").value = "";
+
+codigoLido = "";
+
+document.getElementById("codigo").innerText =
+
+"Aguardando leitura...";
+
+document.getElementById("iaReserva").innerText =
+
+preco > 30
+
+? "⚠ Produto caro"
+
+: "✔ Produto salvo";
+
+})
+
+.catch(err=>{
+
+alert(err.message);
+
+});
+
+}
+
+/* OUVIR PRODUTOS */
+
+function ouvirProdutos(){
+
+onSnapshot(
+
+query(
+colProdutos(),
+orderBy("data","desc")
+),
+
+(snap)=>{
+
+document.getElementById("listaProdutos").innerHTML = "";
+
+document.getElementById("historico").innerHTML = "";
+
+totalGastos = 0;
+
+snap.forEach((item)=>{
+
+const p = item.data();
+
+totalGastos += Number(p.preco);
+
+document.getElementById("listaProdutos").innerHTML +=
+
+`
+
+<div class="prod">
+
+🍔 <strong>${p.nome}</strong>
+
+<br>
+
+💰 R$ ${Number(p.preco).toFixed(2)}
+
+<br>
+
+📷 ${p.codigo}
+
+<button onclick="addCardapio('${p.nome}')">
+
+🍽️ Escolher
+
+</button>
+
+</div>
+
+`;
+
+document.getElementById("historico").innerHTML +=
+
+`
+
+<div class="prod">
+
+📦 ${p.nome}
+
+— R$ ${Number(p.preco).toFixed(2)}
+
+</div>
+
+`;
+
+});
+
+document.getElementById("total").innerText =
+
+totalGastos.toFixed(2);
+
+}
+
+);
+
+}
+
+  }
+
+
+/* CARDÁPIO */
+
+window.addCardapio = function(nome){
+
+document.getElementById("cardapio").innerHTML +=
+
+`
+<div class="prod">
+🍽️ ${nome}
+</div>
+`;
+
+let sugestao = "🍔 Boa escolha";
+
+if(nome.toLowerCase().includes("cafe")){
+
+sugestao = "☕ Você gosta de café";
+
+}
+
+if(nome.toLowerCase().includes("leite")){
+
+sugestao = "🥛 Produto frequente";
+
+}
+
+if(nome.toLowerCase().includes("pao")){
+
+sugestao = "🍞 Café da manhã detectado";
+
+}
+
+document.getElementById("iaComida").innerText =
+
+sugestao;
+
+}
+
+/* ADICIONAR SALDO */
+
+window.addEntrada = function(){
+
+const valor = parseFloat(
+
+document.getElementById("entradaValor").value
+
+);
+
+if(isNaN(valor) || valor <= 0){
+
+alert("Digite valor válido");
+
+return;
+
+}
+
+saldoValor += valor;
+
+setDoc(
+
+docSaldo(),
+
+{
+valor:saldoValor
+}
+
+)
+
+.then(()=>{
+
+document.getElementById("entradaValor").value = "";
+
+})
+
+.catch(err=>{
+
+alert(err.message);
+
+});
+
+}
+
+/* OUVIR SALDO */
+
+function ouvirSaldo(){
+
+onSnapshot(
+
+docSaldo(),
+
+(snap)=>{
+
+const val = snap.exists()
+
+? (snap.data().valor || 0)
+
+: 0;
+
+saldoValor = val;
+
+const fmt =
+
+"R$ " + val.toFixed(2);
+
+document.getElementById("saldo").innerText = fmt;
+
+document.getElementById("saldoReserva").innerText = fmt;
+
+}
+
+);
+
+}
+
+/* SALVAR DÍVIDA */
+
+window.addDivida = function(){
+
+const nome =
+
+document.getElementById("nomeDivida").value.trim();
+
+const valor = parseFloat(
+
+document.getElementById("valorDivida").value
+
+);
+
+if(!nome || isNaN(valor) || valor <= 0){
+
+alert("Preencha tudo");
+
+return;
+
+}
+
+addDoc(
+
+colDividas(),
+
+{
+nome,
+valor,
+data:Date.now()
+}
+
+)
+
+.then(()=>{
+
+document.getElementById("nomeDivida").value = "";
+
+document.getElementById("valorDivida").value = "";
+
+})
+
+.catch(err=>{
+
+alert(err.message);
+
+});
+
+}
+
+/* OUVIR DÍVIDAS */
+
+function ouvirDividas(){
+
+onSnapshot(
+
+query(
+colDividas(),
+orderBy("data","desc")
+),
+
+(snap)=>{
+
+const lista =
+
+document.getElementById("listaDividas");
+
+lista.innerHTML = "";
+
+snap.forEach((item)=>{
+
+const d = item.data();
+
+lista.innerHTML +=
+
+`
+
+<div class="prod">
+
+🧾 <strong>${d.nome}</strong>
+
+<br>
+
+💰 R$ ${Number(d.valor).toFixed(2)}
+
+</div>
+
+`;
+
+});
+
+}
+
+);
+
+}
+
+
+
+  /* EMPREENDEDOR */
+
+window.salvarEmpresa = function(){
+
+const empresa =
+
+document.getElementById("empresa").value;
+
+const produto =
+
+document.getElementById("produtoEmpresa").value;
+
+const promo =
+
+document.getElementById("promoEmpresa").value;
+
+if(!empresa || !produto || !promo){
+
+alert("Preencha tudo");
+
+return;
+
+}
+
+addDoc(
+
+collection(db,"empreendedores"),
+
+{
+empresa,
+produto,
+promo,
+cidade:"Belo Horizonte",
+plano:"premium",
+valorPlano:"19.90 anual",
+data:Date.now()
+}
+
+)
+
+.then(()=>{
+
+alert("✔ Promoção publicada");
+
+document.getElementById("empresa").value = "";
+
+document.getElementById("produtoEmpresa").value = "";
+
+document.getElementById("promoEmpresa").value = "";
+
+})
+
+.catch(err=>{
+
+alert(err.message);
+
+});
+
+}
+
+/* OUVIR EMPRESAS */
+
+function ouvirEmpresas(){
+
+onSnapshot(
+
+query(
+
+collection(db,"empreendedores"),
+
+orderBy("data","desc")
+
+),
+
+(snap)=>{
+
+const lista =
+
+document.getElementById("listaEmpresas");
+
+if(!lista) return;
+
+lista.innerHTML = "";
+
+snap.forEach((item)=>{
+
+const e = item.data();
+
+lista.innerHTML +=
+
+`
+
+<div class="prod">
+
+🔥 <strong>${e.empresa}</strong>
+
+<br>
+
+📦 ${e.produto}
+
+<br>
+
+🎁 ${e.promo}
+
+<br>
+
+⭐ Parceiro Premium
+
+</div>
+
+`;
+
+});
+
+}
+
+);
+
+}
+
+/* IA FINANCEIRA */
+
+setInterval(()=>{
+
+const livre =
+
+saldoValor - totalGastos;
+
+let msg = "";
+
+if(livre <= 0){
+
+msg = "⚠ Sem saldo disponível";
+
+}
+
+else{
+
+const porDia = livre / 30;
+
+msg =
+
+"💰 Pode gastar R$ " +
+
+porDia.toFixed(2) +
+
+" por dia";
+
+}
+
+document.getElementById("iaReserva").innerText =
+
+msg;
+
+},3000);
+
+/* FINAL */
+
+</script>
+
+</body>
+
+</html>
+
+
+
+  
+  
+  
+  
